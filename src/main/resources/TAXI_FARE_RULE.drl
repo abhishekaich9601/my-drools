@@ -1,0 +1,57 @@
+import domain.TaxiRide;
+import domain.Fare;
+import java.util.*;
+
+global domain.Fare fare;
+dialect  "mvel"
+
+rule "Calculate Taxi Fare - Scenario 1"
+    when
+        taxiRideInstance:TaxiRide(isNightSurcharge == false && distanceInMile < 10);
+    then
+       	fare.setNightSurcharge(0);
+       	fare.setRideFare(70);
+end
+
+rule "Calculate Taxi Fare - Scenario 2"
+    when
+        taxiRideInstance:TaxiRide(isNightSurcharge == true && distanceInMile < 10);
+    then
+       	fare.setNightSurcharge(30);
+       	fare.setRideFare(70);
+end
+
+
+rule "Calculate Taxi Fare - Scenario 3"
+    when
+        taxiRideInstance:TaxiRide(isNightSurcharge == false && distanceInMile >= 10 && distanceInMile < 100);
+    then
+       	fare.setNightSurcharge(0);
+       	fare.setRideFare(70+(2*taxiRideInstance.getDistanceInMile()));
+end
+
+
+rule "Calculate Taxi Fare - Scenario 4"
+    when
+        taxiRideInstance:TaxiRide(isNightSurcharge == true && distanceInMile >= 10 && distanceInMile < 100);
+    then
+       	fare.setNightSurcharge(30+taxiRideInstance.getDistanceInMile());
+       	fare.setRideFare(70+(2*taxiRideInstance.getDistanceInMile()));
+end
+
+
+rule "Calculate Taxi Fare - Scenario 5"
+    when
+        taxiRideInstance:TaxiRide(isNightSurcharge == false && distanceInMile >= 100);
+    then
+       	fare.setNightSurcharge(0);
+       	fare.setRideFare(70+(1.5*taxiRideInstance.getDistanceInMile()));
+end
+
+rule "Calculate Taxi Fare - Scenario 6"
+    when
+        taxiRideInstance:TaxiRide(isNightSurcharge == true && distanceInMile >= 100);
+    then
+       	fare.setNightSurcharge(30+taxiRideInstance.getDistanceInMile());
+       	fare.setRideFare(70+(1.5*taxiRideInstance.getDistanceInMile()));
+end

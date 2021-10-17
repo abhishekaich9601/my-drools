@@ -1,0 +1,14 @@
+import domain.MyOutput;
+import domain.MyNestedFact;
+import java.util.*;
+
+global domain.MyOutput myOutput;
+dialect  "mvel"
+
+rule "Calculate child list"
+    when
+        $myNestedFact : MyNestedFact(childList.size>0);
+    then
+       	myOutput.setIsWorking(true);
+end
+
